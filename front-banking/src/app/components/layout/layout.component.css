@@ -1,0 +1,40 @@
+.container {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .sidebar {
+    width: 200px;
+    background-color: #f0f0f0;
+    padding: 1rem;
+  }
+  
+  .sidebar h3 {
+    text-align: center;
+  }
+  
+  .sidebar ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .sidebar ul li {
+    margin: 1rem 0;
+  }
+  
+  .sidebar ul li a {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+  }
+  
+  .sidebar ul li a.active {
+    color: blue;
+  }
+  
+  .main {
+    flex-grow: 1;
+    padding: 2rem;
+    background-color: #fff;
+  }
+  

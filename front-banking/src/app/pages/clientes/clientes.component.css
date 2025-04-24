@@ -1,0 +1,24 @@
+.header-bar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  
+  .nuevo {
+    background-color: yellow;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .tabla-clientes {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .tabla-clientes td {
+    padding: 0.5rem;
+    border-bottom: 1px solid #ccc;
+  }
+  
