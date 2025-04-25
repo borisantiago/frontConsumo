@@ -1,11 +1,89 @@
 <h2>Clientes</h2>
 <div class="header-bar">
-  <input type="text" placeholder="Buscar" />
-  <button class="nuevo">Nuevo</button>
+  <input type="text" #searchInput placeholder="Buscar" />
+  <button class="find" (click)="findCustomer(searchInput.value)">Buscar</button>
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+  <button class="nuevo" (click)="openForm()">Nuevo</button>
 </div>
 
-<table class="tabla-clientes">
-  <tr *ngFor="let cliente of clientes">
-    <td>{{ cliente.nombre }}</td>
-  </tr>
+<table class="tabla-clientes" *ngIf="clientes.length > 0">
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Cédula</th>
+      <th>Número de Cuenta</th>
+      <th>Edad</th>
+      <th>Genero</th>
+      <th>Dirección</th>
+      <th>Estado</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngFor="let cliente of clientes">
+      <tr *ngFor="let cuenta of cliente.accounts; let i = index">
+        <td *ngIf="i === 0" [attr.rowspan]="cliente.accounts.length">{{ cliente.name }}</td>
+        <td *ngIf="i === 0" [attr.rowspan]="cliente.accounts.length">{{ cliente.identification }}</td>
+        <td>{{ cuenta.accountNumber }}</td>
+        <td *ngIf="i === 0" [attr.rowspan]="cliente.accounts.length">{{ cliente.age }}</td>
+        <td *ngIf="i === 0" [attr.rowspan]="cliente.accounts.length">{{ cliente.gender }}</td>
+        <td *ngIf="i === 0" [attr.rowspan]="cliente.accounts.length">{{ cliente.address }}</td>
+        <td *ngIf="i === 0" [attr.rowspan]="cliente.accounts.length">{{ cliente.status ? 'Activa' : 'Inactiva' }}</td>
+        <td *ngIf="i === 0" [attr.rowspan]="cliente.accounts.length">
+          <button (click)="eliminarCliente(cliente.identification)">Borrar</button>
+        </td>
+      </tr>
+    </ng-container>
+  </tbody>
 </table>
+
+<!-- Panel de nuevo cliente -->
+<div class="form-panel" *ngIf="mostrarFormulario">
+  <h3>Nuevo Cliente</h3>
+  <label>
+    Nombre:
+    <input type="text" [(ngModel)]="nuevoCliente.name" />
+  </label>
+  <label>
+    Identificación:
+    <input type="text" [(ngModel)]="nuevoCliente.identification" />
+  </label>
+  <label>
+    Edad:
+    <input type="text" [(ngModel)]="nuevoCliente.age" />
+  </label>
+  <label>
+    Genero:
+    <select [(ngModel)]="nuevoCliente.gender">
+      <option>M</option>
+      <option>F</option>
+    </select>
+  </label>
+  <label>
+    Dirección:
+    <input type="text" [(ngModel)]="nuevoCliente.address" />
+  </label>
+  <label>
+    Teléfono:
+    <input type="text" [(ngModel)]="nuevoCliente.phone" />
+  </label>
+  <label>
+    Contraseña:
+    <input type="text" [(ngModel)]="nuevoCliente.password" />
+  </label>
+  <label>
+    Nueva cuenta:
+    <select [(ngModel)]="nuevoCliente.accountType">
+      <option>Ahorros</option>
+      <option>Corriente</option>
+    </select>
+  </label>
+  <label>
+    Balance:
+    <input type="number" [(ngModel)]="nuevoCliente.balance" />
+  </label>
+  <button (click)="saveCustomer()">Guardar</button>
+  <button (click)="closeForm()">Cancelar</button>
+</div>

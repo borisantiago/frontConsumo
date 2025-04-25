@@ -1,1 +1,61 @@
 <p>cuentas works!</p>
+<div class="header-bar">
+    <button class="nuevo" (click)="openForm()">Nuevo</button>
+  </div>
+  
+  <table class="tabla-clientes" *ngIf="clientes.length > 0">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Cédula</th>
+        <th>Número de Cuenta</th>
+        <th>Tipo de Cuenta</th>
+        <th>Balance</th>
+        <th>Detalle</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let cliente of clientes">
+        <tr *ngFor="let cuenta of cliente.accounts; let i = index">
+          <td *ngIf="i === 0" [attr.rowspan]="cliente.accounts.length">{{ cliente.name }}</td>
+          <td *ngIf="i === 0" [attr.rowspan]="cliente.accounts.length">{{ cliente.identification }}</td>
+          <td>{{ cuenta.accountNumber }}</td>
+          <td>{{ cuenta.accountType }}</td>
+          <td>{{ cuenta.balance | currency:'USD' }}</td>
+          <td>
+            <button routerLink="/movimientos" routerLinkActive="active">Movimientos</button>
+          </td>
+          <td>
+            <button (click)="eliminarCuenta(cuenta.accountNumber)">Borrar</button>
+          </td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+  
+  <!-- Panel de nuevo cliente -->
+  <div class="form-panel" *ngIf="mostrarFormulario">
+    <h3>Nueva Cuenta</h3>
+    <label>
+      Tipo de cuenta:
+      <select [(ngModel)]="nuevaCuenta.accountType">
+        <option>Ahorros</option>
+        <option>Corriente</option>
+      </select>
+    </label>
+    <label>
+      Balance:
+      <input type="number" [(ngModel)]="nuevaCuenta.balance" />
+    </label>
+    <label>
+      Identificación:
+      <select [(ngModel)]="nuevaCuenta.identification">
+        <option *ngFor="let cliente of clientes" [value]="cliente.identification">
+          {{ cliente.name }} ({{ cliente.identification }})
+        </option>
+      </select>
+    </label>
+    <button (click)="saveAccount()">Guardar</button> 
+    <button (click)="closeForm()">Cancelar</button>
+  </div>

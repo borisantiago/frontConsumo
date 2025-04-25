@@ -11,7 +11,9 @@ const routes: Routes = [
   { path: 'movimientos', component: MovimientosComponent },
   { path: 'reportes', component: ReportesComponent },
   { path: '', redirectTo: 'clientes', pathMatch: 'full' },
-  { path: '**', redirectTo: 'clientes' }
+  { path: '**', redirectTo: 'clientes' },
+  { path: 'movimientos/:accountNumber', component: MovimientosComponent }
+
 ];
 
 @NgModule({
