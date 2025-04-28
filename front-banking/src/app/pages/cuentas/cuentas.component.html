@@ -24,10 +24,10 @@
           <td>{{ cuenta.accountType }}</td>
           <td>{{ cuenta.balance | currency:'USD' }}</td>
           <td>
-            <button routerLink="/movimientos" routerLinkActive="active">Movimientos</button>
-          </td>
-          <td>
             <button (click)="eliminarCuenta(cuenta.accountNumber)">Borrar</button>
+          </td>
+          <td *ngIf="i === 0" [attr.rowspan]="cliente.accounts.length">
+            <button (click)="verMovimientos(cliente.identification)">Movimientos</button>
           </td>
         </tr>
       </ng-container>

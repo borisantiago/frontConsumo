@@ -3,7 +3,6 @@ import { CustomersService } from '../../service/customers.service';
 import { AccountsService } from "../../service/accounts.service";
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { error } from 'console';
 import { MovementsService } from '../../service/movements.service';
 import { Router, RouterModule } from '@angular/router';
 
@@ -32,8 +31,8 @@ export class CuentasComponent {
     this.loadCustomers();
   }
 
-  verMovimientos(accountNumber: number) {
-    this.router.navigate(['/movimientos', accountNumber]);
+  verMovimientos(identification: string) {
+    this.router.navigate(['/movimientos'], { queryParams: { identification } });
   }
 
   loadCustomers() {
@@ -104,21 +103,6 @@ export class CuentasComponent {
         }
       });
     }
-  }
-
-  // visualizarMoviminetos(identificacion:any, star:any, end:any) {
-  visualizarMoviminetos(identificacion:any) {
-
-    // this.movimientosService.visualizarMovements(identificacion, star, end).subscribe({
-    //   next: (movements) => {
-    //     this.clientes = [movements];
-    //   },
-    // error: (err) => {
-    //   console.error('Error:', err);
-    //   this.errorMessage = err?.error?.description || 'Error desconocido';
-    //   this.loadCustomers();
-    // }      
-    // });
   }
 
 

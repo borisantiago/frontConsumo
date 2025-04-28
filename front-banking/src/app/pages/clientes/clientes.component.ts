@@ -1,9 +1,8 @@
-import { Component, OnInit  } from '@angular/core';
+import { Component } from '@angular/core';
 import { CustomersService } from '../../service/customers.service';
 import { AccountsService } from "../../service/accounts.service";
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { error } from 'console';
 
 @Component({
   selector: 'app-clientes',
@@ -16,6 +15,8 @@ import { error } from 'console';
 export class ClientesComponent {
   clientes: any[] = [];
   mostrarFormulario = false;
+  updateClienteRecord: any = {};
+  mostrarFormularioUpdate = false;
   errorMessage: string = '';
   nuevoCliente = {
     name: '',
@@ -37,12 +38,15 @@ export class ClientesComponent {
   loadCustomers() {
     this.clienteService.getCustomers().subscribe(data => {
       this.clientes = data; 
-      console.log(this.clientes);  
     });
   }
 
   openForm() {
     this.mostrarFormulario = true;
+  }
+
+  openFormUpdate() {
+    this.mostrarFormularioUpdate = true;
   }
 
   closeForm() {
@@ -92,6 +96,7 @@ export class ClientesComponent {
     this.cuentaService.createAccount(nuevaCuenta).subscribe(() => {
       this.clientes.push(nuevaCuenta);
       this.closeForm();
+      this.loadCustomers();
     });
   }
 
@@ -117,8 +122,9 @@ export class ClientesComponent {
   eliminarCliente(identificacion: string) {
     if (confirm('¿El usuario será cambiado el estado a cancelado y se archivara, sus cuentas y movimientos seran eliminados?')) {
       this.clienteService.deleteCustomer(identificacion).subscribe({
-        next: () => {
-          this.clientes = this.clientes.filter(c => c.identification !== identificacion);
+        next: (response:any) => {
+          alert(response?.description || 'Cliente eliminado correctamente');
+          this.loadCustomers();
         },
         error: () => {
           alert('Error al eliminar el cliente');
@@ -126,5 +132,46 @@ export class ClientesComponent {
       });
     }
   }
-  
+
+  updateCliente(valor: any) {
+    const cedula = {
+      identification: valor
+    };
+    
+    this.clienteService.findCustomer(cedula).subscribe({
+      next: (customer) => {
+        if (customer) {
+          this.updateClienteRecord = customer; 
+          this.updateClienteRecord.password = "12345"
+          this.mostrarFormularioUpdate = true;
+        } else {
+          alert('Cliente no encontrado');
+        }
+      },
+      error: (err) => {
+        console.error('Error al buscar cliente:', err);
+        alert('Error al buscar el cliente');
+      }
+    });
+  }
+
+  guardarClienteActualizado() {
+    this.clienteService.updateCustomer(this.updateClienteRecord).subscribe({
+      next: (response: any) => {
+        alert(response?.description || 'Cliente actualizado exitosamente');
+        this.mostrarFormularioUpdate = false;
+        this.loadCustomers(); 
+        this.closeFormUpdate();
+      },
+      error: () => {
+        this.loadCustomers();
+        this.closeFormUpdate()
+      }
+    });
+  }
+
+  closeFormUpdate() {
+    this.mostrarFormularioUpdate = false;
+  }
+
 }

@@ -11,7 +11,7 @@ export class AccountsService {
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
-      'x-guid': '511e8470-e19b-42d4-a7e6-4466ftw40000',
+      'x-guid': '550e8777-e29b-41d4-a716-446655440000',
       'x-device': '12354',
       'x-device-ip': '192.168.7.7',
       'x-session': 'dsds1212'
@@ -25,6 +25,6 @@ export class AccountsService {
   }
 
   deleteAccount(id: any): Observable<any> {
-    return this.http.get<any>(this.apiUrl + "/v1/delete-account?id="+id, this.httpOptions);
+    return this.http.delete<any>(this.apiUrl + "/v1/delete-account?id="+id, this.httpOptions);
   }
 }

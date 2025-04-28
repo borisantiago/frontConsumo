@@ -33,6 +33,7 @@
         <td *ngIf="i === 0" [attr.rowspan]="cliente.accounts.length">{{ cliente.status ? 'Activa' : 'Inactiva' }}</td>
         <td *ngIf="i === 0" [attr.rowspan]="cliente.accounts.length">
           <button (click)="eliminarCliente(cliente.identification)">Borrar</button>
+          <button (click)="updateCliente(cliente.identification)">Editar</button>
         </td>
       </tr>
     </ng-container>
@@ -87,3 +88,44 @@
   <button (click)="saveCustomer()">Guardar</button>
   <button (click)="closeForm()">Cancelar</button>
 </div>
+
+<!-- Panel de editar cliente -->
+<div class="form-panel-update" *ngIf="mostrarFormularioUpdate">
+  <label>
+    Nombre:
+    <input type="text" [(ngModel)]="updateClienteRecord.name" />
+  </label>
+  <label>
+    Identificación:
+    <input type="text" [(ngModel)]="updateClienteRecord.identification" readonly/>
+  </label>
+  <label>
+    Edad:
+    <input type="text" [(ngModel)]="updateClienteRecord.age" />
+  </label>
+  <label>
+    Genero:
+    <select [(ngModel)]="updateClienteRecord.gender">
+      <option>M</option>
+      <option>F</option>
+    </select>
+  </label>
+  <label>
+    Dirección:
+    <input type="text" [(ngModel)]="updateClienteRecord.address" />
+  </label>
+  <label>
+    Teléfono:
+    <input type="text" [(ngModel)]="updateClienteRecord.phone" />
+  </label>
+  <label>
+    Estado:
+    <select [(ngModel)]="updateClienteRecord.status">
+      <option [ngValue]="true">Activo</option>
+      <option [ngValue]="false">Inactivo</option>
+    </select>
+  </label>
+  <button (click)="guardarClienteActualizado()">Guardar</button>
+  <button (click)="closeFormUpdate()">Cancelar</button>
+</div>
+

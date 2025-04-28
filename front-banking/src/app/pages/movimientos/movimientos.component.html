@@ -4,62 +4,111 @@
   <label>
     Cédula:
     <select [(ngModel)]="filtros.identification" name="identification" required>
-        <option value="" disabled selected>Seleccione una cédula</option>
-        <option *ngFor="let cliente of clientes" [value]="cliente.identification">
-          {{ cliente.identification }} - {{ cliente.name }}
-        </option>
-      </select>
+      <option value="" disabled selected>Seleccione una cédula</option>
+      <option *ngFor="let cliente of clientes" [value]="cliente.identification">
+        {{ cliente.identification }} - {{ cliente.name }}
+      </option>
+    </select>
   </label>
-
   <label>
     Desde:
     <input type="date" [(ngModel)]="filtros.start" name="start" required />
   </label>
-
   <label>
     Hasta:
     <input type="date" [(ngModel)]="filtros.end" name="end" required />
   </label>
-
   <button type="submit">Buscar</button>
 </form>
 
 <hr />
 
-<h2>Movimientos de {{ cliente?.name }} ({{ cliente?.identification }}) </h2>
+<div class="header-bar">
+  <button class="nuevo" (click)="openForm()">Nuevo</button>
+</div>
+<div class="form-panel" *ngIf="mostrarFormulario">
+  <h3>Nuevo Movimiento</h3>
+
+  <label>
+    Número de Cuenta:
+    <select [(ngModel)]="nuevoMovimiento.accountNumber" name="accountNumber" required>
+      <option value="" disabled selected>Seleccione una cuenta</option>
+      <ng-container *ngFor="let cliente of clientes">
+        <ng-container *ngFor="let cuenta of cliente.accounts">
+          <option [value]="cuenta.accountNumber">
+            {{ cuenta.accountNumber }} - {{ cliente.name }}
+          </option>
+        </ng-container>
+      </ng-container>
+    </select>
+  </label>
+
+  <label>
+    Tipo de Movimiento:
+    <select [(ngModel)]="nuevoMovimiento.movementType" name="movementType" required>
+      <option value="CREDITO">Crédito</option>
+      <option value="DEBITO">Débito</option>
+    </select>
+  </label>
+
+  <label>
+    Monto:
+    <input type="number" [(ngModel)]="nuevoMovimiento.amount" name="amount" required min="0.01" step="0.01"/>
+  </label>
+
+  <label>
+    Fecha:
+    <input type="date" [(ngModel)]="nuevoMovimiento.date" name="date" required />
+  </label>
+
+  <button (click)="saveMovement()">Guardar Movimiento</button>
+  <button (click)="closeForm()">Cancelar</button>
+</div>
+
+<h2>Movimientos de {{ cliente?.name }} ({{ cliente?.identification }})</h2>
 
 <table *ngIf="movimientos.length > 0; else sinMovimientos" style="border-collapse: collapse; width: 100%;">
-    <thead>
-      <tr style="border: 1px solid black;">
-        <th style="border: 1px solid black;">N° Cuenta</th>
-        <th style="border: 1px solid black;">Tipo de Cuenta</th>
-        <th style="border: 1px solid black;">Tipo Movimiento</th>
-        <th style="border: 1px solid black;">Fecha</th>
-        <th style="border: 1px solid black;">Monto</th>
-        <th style="border: 1px solid black;">Balance</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let mov of movimientos" style="border: 1px solid black;">
-        <td style="border: 1px solid black;">{{ mov.accountNumber }}</td>
-        <td style="border: 1px solid black;">{{ mov.accountType }}</td>
-        <td style="border: 1px solid black;">{{ mov.movementType }}</td>
-        <td style="border: 1px solid black;">{{ mov.date }}</td>
-        <td 
-          style="border: 1px solid black; font-weight: bold;"
-          [ngStyle]="{
-            color: mov.movementType === 'CREDITO' ? 'green' : mov.movementType === 'DEBITO' ? 'red' : 'black'
-          }">
+  <thead>
+    <tr style="border: 1px solid black;">
+      <th style="border: 1px solid black;">N° Cuenta</th>
+      <th style="border: 1px solid black;">Tipo de Cuenta</th>
+      <th style="border: 1px solid black;">Tipo Movimiento</th>
+      <th style="border: 1px solid black;">Fecha</th>
+      <th style="border: 1px solid black;">Monto</th>
+      <th style="border: 1px solid black;">Balance</th>
+      <th style="border: 1px solid black;">Acción</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    <tr 
+      *ngFor="let mov of movimientos"
+      [ngStyle]="{
+        'background-color': getColorForAccount(mov.accountNumber),
+        'border': '1px solid black'
+      }"
+    >
+
+      <td style="border: 1px solid black;">{{ mov.accountNumber }}</td>
+      <td style="border: 1px solid black;">{{ mov.accountType }}</td>
+      <td style="border: 1px solid black;">{{ mov.movementType }}</td>
+      <td style="border: 1px solid black;">{{ mov.date }}</td>
+      <td style="border: 1px solid black; font-weight: bold;">
+        <span [style.color]="mov.movementType === 'CREDITO' ? 'green' : mov.movementType === 'DEBITO' ? 'red' : 'black'">
           {{ mov.movementType === 'DEBITO' ? '-' : '' }}{{ mov.amount | currency:'USD' }}
-        </td>
-        <td style="border: 1px solid black;">{{ mov.balance | currency:'USD' }}</td>
-      </tr>
-    </tbody>
-  </table>
+        </span>
+      </td>
+      <td style="border: 1px solid black;">{{ mov.balance | currency:'USD' }}</td>
+      <td>
+        <button (click)="eliminarMovimiento(mov.id)">Borrar</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 <ng-template #sinMovimientos>
   <p>No se encontraron movimientos en el rango indicado.</p>
 </ng-template>
 
+<br>
 <button (click)="generarPDF()">📄 Exportar PDF</button>
-
