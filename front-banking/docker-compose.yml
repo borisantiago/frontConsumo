@@ -1,11 +1,11 @@
 version: "3.8"
 
 services:
-  front-angular-app:
+  frontend:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: front-angular-container
     ports:
-      - "4200:80" # Puerto de tu máquina:puerto del contenedor
+      - "4200:80"
     restart: unless-stopped
